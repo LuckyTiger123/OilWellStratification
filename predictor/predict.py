@@ -36,16 +36,15 @@ bst = lgb.Booster(model_file=model_path)
 item = las.LASReader(well_las_file_path)
 raw_data = pd.DataFrame(item.data)
 
-if not {'DEPTH', 'Por', 'Perm', 'AC', 'SP', 'COND', 'ML1', 'ML2'}.issubset(raw_data.columns):
-    lack_item = {'DEPTH', 'Por', 'Perm', 'AC', 'SP', 'COND', 'ML1', 'ML2'} - set(raw_data.columns)
+if not {'DEPTH', 'AC', 'SP', 'COND', 'ML1', 'ML2'}.issubset(raw_data.columns):
+    lack_item = {'DEPTH', 'AC', 'SP', 'COND', 'ML1', 'ML2'} - set(raw_data.columns)
     print('This las file loss attribution ', lack_item)
     sys.exit(1)
 
-col_item = raw_data[['DEPTH', 'Por', 'Perm', 'AC', 'SP', 'COND', 'ML1', 'ML2']]
-use_item = col_item[(col_item['Por'] != -9999) & (col_item['Perm'] != -9999) & (col_item['Por'] != -9999) & (
-        col_item['AC'] != -9999) & (col_item['SP'] != -9999) & (
-                            col_item['COND'] != -9999) & (col_item['ML1'] != -9999) & (
-                            col_item['ML2'] != -9999)]
+col_item = raw_data[['DEPTH', 'AC', 'SP', 'COND', 'ML1', 'ML2']]
+use_item = col_item[
+    (col_item['AC'] != -9999) & (col_item['SP'] != -9999) & (col_item['COND'] != -9999) & (col_item['ML1'] != -9999) & (
+                col_item['ML2'] != -9999)]
 use_item['Well'] = well_name[:2]
 pred_input = np.array(use_item)
 
